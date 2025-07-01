@@ -5,9 +5,29 @@ output:
     keep_md: true
 ---
 
-```{r, echo = TRUE,fig.path = 'figure/'}
 
+``` r
 library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+``` r
 library(ggplot2)
 ## Loading and preprocessing the data
 data <- read.csv("activity.csv")
@@ -22,15 +42,31 @@ total_steps_per_day <- data %>%
 ggplot(total_steps_per_day, aes(x = total_steps)) +
   geom_histogram(binwidth = 1000, fill = "blue", color = "black") +
   labs(title = "Histogram of Total Steps Taken Per Day", x = "Total Steps", y = "Frequency")
+```
 
+![](figure/unnamed-chunk-1-1.png)<!-- -->
+
+``` r
 mean_steps <- mean(total_steps_per_day$total_steps)
 median_steps <- median(total_steps_per_day$total_steps)
 
 
 mean_steps
+```
+
+```
+## [1] 9354.23
+```
+
+``` r
 median_steps
+```
 
+```
+## [1] 10395
+```
 
+``` r
 ## What is the average daily activity pattern?
 avg_steps_per_interval <- data %>%
   group_by(interval) %>%
@@ -40,12 +76,24 @@ ggplot(avg_steps_per_interval, aes(x = interval, y = avg_steps)) +
   geom_line() +
   labs(title = "Average Daily Activity Pattern", x = "5-Minute Interval", y = "Average Steps") +
   theme_minimal()
-  
+```
+
+![](figure/unnamed-chunk-1-2.png)<!-- -->
+
+``` r
 max_interval <- avg_steps_per_interval[which.max(avg_steps_per_interval$avg_steps), ]
 
 max_interval
+```
 
+```
+## # A tibble: 1 × 2
+##   interval avg_steps
+##      <int>     <dbl>
+## 1      835      206.
+```
 
+``` r
 ## Imputing missing values
 
 
@@ -54,7 +102,13 @@ total_missing <- sum(is.na(data$steps))
 
 # Print the total number of missing values
 print(paste("Total missing values: ", total_missing))
+```
 
+```
+## [1] "Total missing values:  2304"
+```
+
+``` r
 # Calculate the mean steps for each 5-minute interval
 mean_steps_per_interval <- data %>%
   group_by(interval) %>%
@@ -75,16 +129,32 @@ total_steps_imputed <- data_imputed %>%
 ggplot(total_steps_imputed, aes(x = total_steps)) +
   geom_histogram(binwidth = 1000, fill = "green", color = "black") +
   labs(title = "Histogram of Total Steps Taken Per Day (After Imputation)", x = "Total Steps", y = "Frequency")
+```
 
+![](figure/unnamed-chunk-1-3.png)<!-- -->
+
+``` r
 # Calculate the mean and median of the total steps per day after imputation
 mean_steps_imputed <- mean(total_steps_imputed$total_steps)
 median_steps_imputed <- median(total_steps_imputed$total_steps)
 
 # Print the results
 print(paste("Mean after imputation: ", mean_steps_imputed))
+```
+
+```
+## [1] "Mean after imputation:  10766.1886792453"
+```
+
+``` r
 print(paste("Median after imputation: ", median_steps_imputed))
+```
 
+```
+## [1] "Median after imputation:  10766.1886792453"
+```
 
+``` r
 ## Are there differences in activity patterns between weekdays and weekends?
 
 
@@ -96,7 +166,14 @@ data_imputed$day_type <- ifelse(weekdays(as.Date(data_imputed$date)) %in% c("Sat
 avg_steps_by_day_type <- data_imputed %>%
   group_by(interval, day_type) %>%
   summarize(avg_steps = mean(steps, na.rm = TRUE))
+```
 
+```
+## `summarise()` has grouped output by 'interval'. You can override using the
+## `.groups` argument.
+```
+
+``` r
 # Create a panel plot comparing weekday and weekend activity patterns
 ggplot(avg_steps_by_day_type, aes(x = interval, y = avg_steps, color = day_type)) +
   geom_line() +
@@ -104,3 +181,5 @@ ggplot(avg_steps_by_day_type, aes(x = interval, y = avg_steps, color = day_type)
   labs(title = "Average Daily Activity Patterns: Weekday vs Weekend", x = "5-Minute Interval", y = "Average Steps") +
   theme_minimal()
 ```
+
+![](figure/unnamed-chunk-1-4.png)<!-- -->
